@@ -24,7 +24,7 @@ public class Loader {
     
     public func showLoader() {
         if activityIndicatorView == nil {
-            activityIndicatorView = CustomActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 90, height: 90))
+            activityIndicatorView = CustomActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
             activityIndicatorView?.animationName = animationName
             //activityIndicatorView?.hidesWhenStopped = true
         }
