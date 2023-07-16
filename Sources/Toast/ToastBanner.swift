@@ -126,6 +126,11 @@ public class ToastBanner {
         case .none:
             break
         }
+       let swipGes = UISwipeGestureRecognizer(target: self, action: #selector(bannerSwipeGes))
+       swipGes.direction = settings?.position == .Bottom ? .down : .up
+       banner?.addGestureRecognizer(swipGes)
+       let haptic =  UIImpactFeedbackGenerator(style: .medium)
+        haptic.impactOccurred()
         UIView.animate(
             withDuration: 0.5,
             delay: 0.0,
@@ -134,7 +139,7 @@ public class ToastBanner {
             options: [],
             animations: {
                 self.banner!.transform = CGAffineTransform(translationX: 0, y: self.settings!.position == .Bottom ?  self.banner!.frame.origin.y - 190 : self.banner!.frame.origin.y + 190)
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                
                 let time = DispatchTimeInterval.seconds(self.settings?.theme.time ?? 3)
                 DispatchQueue.main.asyncAfter(deadline: .now() + time) {
                     self.dismiss()
@@ -143,6 +148,10 @@ public class ToastBanner {
         titleLbl.text = title
         messageLbl.text = message
         
+    }
+    
+    @objc private func bannerSwipeGes(){
+        self.dismiss()
     }
     
    public func dismiss(){
