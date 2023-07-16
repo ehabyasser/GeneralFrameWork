@@ -118,10 +118,10 @@ public class ToastBanner {
         }
         switch settings?.position {
         case .Bottom:
-            banner!.bottomAnchor.constraint(equalTo: window.bottomAnchor , constant: 70).isActive = true
+            banner!.bottomAnchor.constraint(equalTo: window.bottomAnchor , constant: 120).isActive = true
             break
         case .Top:
-            banner!.topAnchor.constraint(equalTo: window.topAnchor , constant: -70).isActive = true
+            banner!.topAnchor.constraint(equalTo: window.topAnchor , constant: -120).isActive = true
             break
         case .none:
             break
