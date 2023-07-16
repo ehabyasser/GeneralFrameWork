@@ -39,7 +39,7 @@ struct BannerSettings{
 
 @available(iOS 13.0, *)
 public class ToastBanner {
-    static let shared:ToastBanner = ToastBanner()
+    public static let shared:ToastBanner = ToastBanner()
     var settings:BannerSettings?
     private let stack:UIStackView = {
         let stack = UIStackView()
