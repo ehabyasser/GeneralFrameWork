@@ -20,6 +20,8 @@ class DefaultBannerStyle: BannerTheme {
             return UIImage(systemName: "exclamationmark.triangle")
         case .info:
             return UIImage(systemName: "info.circle")
+        case .success:
+            return UIImage(systemName: "checkmark.circle")
         }
     }
     
@@ -30,6 +32,8 @@ class DefaultBannerStyle: BannerTheme {
         case .warning:
             return .white
         case .info:
+            return .white
+        case .success:
             return .white
         }
     }
@@ -42,6 +46,8 @@ class DefaultBannerStyle: BannerTheme {
             return .systemYellow
         case .info:
             return .label
+        case .success:
+            return .systemGreen
         }
     }
     
@@ -53,6 +59,8 @@ class DefaultBannerStyle: BannerTheme {
             return .white
         case .info:
             return .systemBackground
+        case .success:
+            return .white
         }
     }
     
@@ -64,6 +72,8 @@ class DefaultBannerStyle: BannerTheme {
             return .white
         case .info:
             return .systemBackground
+        case .success:
+            return .white
         }
     }
     
