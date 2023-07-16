@@ -41,7 +41,7 @@ public struct BannerSettings{
 @available(iOS 13.0, *)
 public class ToastBanner {
     public static let shared:ToastBanner = ToastBanner()
-    var settings:BannerSettings?
+    public var settings:BannerSettings?
     private let stack:UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
