@@ -20,19 +20,19 @@ public protocol BannerTheme {
     var style:BannerStyle{ get set }
 }
 
-enum BannerStyle{
+public enum BannerStyle{
     case error
     case warning
     case info
 }
 
 
-enum BannerPosition{
+public enum BannerPosition{
     case Top
     case Bottom
 }
 
-struct BannerSettings{
+public struct BannerSettings{
     var theme:BannerTheme
     var position:BannerPosition = .Bottom
 }
