@@ -19,19 +19,20 @@ public protocol BannerTheme {
     var iconSize:CGFloat {get}
     var style:BannerStyle{ get set }
 }
-
+@available(iOS 13.0, *)
 public enum BannerStyle{
     case error
     case warning
     case info
 }
 
-
+@available(iOS 13.0, *)
 public enum BannerPosition{
     case Top
     case Bottom
 }
 
+@available(iOS 13.0, *)
 public struct BannerSettings{
     var theme:BannerTheme
     var position:BannerPosition = .Bottom
