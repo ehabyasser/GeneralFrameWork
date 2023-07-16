@@ -109,7 +109,7 @@ public class ToastBanner {
         window.addSubview(banner!)
         banner!.leadingAnchor.constraint(equalTo: window.leadingAnchor , constant: 20).isActive = true
         banner!.trailingAnchor.constraint(equalTo: window.trailingAnchor , constant: -20).isActive = true
-        banner!.heightAnchor.constraint(equalToConstant: 90).isActive = true
+        banner!.heightAnchor.constraint(equalToConstant: 70).isActive = true
         if title.isEmpty {
             titleLbl.isHidden = true
         }
