@@ -34,7 +34,7 @@ public enum BannerPosition{
 
 @available(iOS 13.0, *)
 public struct BannerSettings{
-    var theme:BannerTheme
+    public var theme:BannerTheme
     var position:BannerPosition = .Bottom
 }
 
