@@ -133,7 +133,7 @@ public class ToastBanner {
             initialSpringVelocity: 1,
             options: [],
             animations: {
-                self.banner!.transform = CGAffineTransform(translationX: 0, y: self.settings!.position == .Bottom ?  self.banner!.frame.origin.y - 120 : self.banner!.frame.origin.y + 120)
+                self.banner!.transform = CGAffineTransform(translationX: 0, y: self.settings!.position == .Bottom ?  self.banner!.frame.origin.y - 190 : self.banner!.frame.origin.y + 190)
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 let time = DispatchTimeInterval.seconds(self.settings?.theme.time ?? 3)
                 DispatchQueue.main.asyncAfter(deadline: .now() + time) {
