@@ -91,10 +91,10 @@ public class ToastBanner {
     }()
     
     private var banner:UIView? = nil
-    func show(title:String = "" , message:String , style:BannerStyle , position:BannerPosition){
+   public func show(title:String = "" , message:String , style:BannerStyle , position:BannerPosition){
         guard let window = getWindowView() else {return}
         if settings == nil {
-            settings = BannerSettings(theme: BannerStyleManager())
+            settings = BannerSettings(theme: DefaultBannerStyle())
         }
         settings?.position = position
         settings?.theme.style = style
@@ -140,7 +140,7 @@ public class ToastBanner {
         
     }
     
-    func dismiss(){
+   public func dismiss(){
         UIView.animate(
             withDuration: 0.5,
             delay: 0.0,
@@ -229,7 +229,7 @@ extension UIView {
 }
 
 @available(iOS 13.0, *)
-class BannerStyleManager: BannerTheme {
+class DefaultBannerStyle: BannerTheme {
     var style: BannerStyle = .info
     
     var icon:UIImage?{
