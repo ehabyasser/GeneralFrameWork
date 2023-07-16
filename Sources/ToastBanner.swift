@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol BannerTheme {
+public protocol BannerTheme {
     var icon : UIImage? {get}
     var backgorundColor:UIColor {get}
     var iconColor:UIColor {get}
@@ -36,7 +36,7 @@ struct BannerSettings{
     var position:BannerPosition = .Bottom
 }
 
-class ToastBanner {
+public class ToastBanner {
     static let shared:ToastBanner = ToastBanner()
     var settings:BannerSettings?
     private let stack:UIStackView = {
