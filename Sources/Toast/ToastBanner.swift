@@ -109,7 +109,7 @@ public class ToastBanner {
         window.addSubview(banner!)
         banner!.leadingAnchor.constraint(equalTo: window.leadingAnchor , constant: 20).isActive = true
         banner!.trailingAnchor.constraint(equalTo: window.trailingAnchor , constant: -20).isActive = true
-        banner!.heightAnchor.constraint(equalToConstant: 90).isActive = true
+        banner!.heightAnchor.constraint(equalToConstant: 70).isActive = true
         if title.isEmpty {
             titleLbl.isHidden = true
         }
@@ -118,10 +118,10 @@ public class ToastBanner {
         }
         switch settings?.position {
         case .Bottom:
-            banner!.bottomAnchor.constraint(equalTo: window.bottomAnchor , constant: 90).isActive = true
+            banner!.bottomAnchor.constraint(equalTo: window.bottomAnchor , constant: 70).isActive = true
             break
         case .Top:
-            banner!.topAnchor.constraint(equalTo: window.topAnchor , constant: -90).isActive = true
+            banner!.topAnchor.constraint(equalTo: window.topAnchor , constant: -70).isActive = true
             break
         case .none:
             break
