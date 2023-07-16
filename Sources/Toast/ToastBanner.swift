@@ -24,6 +24,7 @@ public enum BannerStyle{
     case error
     case warning
     case info
+    case success
 }
 
 @available(iOS 13.0, *)
@@ -46,6 +47,7 @@ public struct BannerSettings{
 public class ToastBanner {
     public static let shared:ToastBanner = ToastBanner()
     public var settings:BannerSettings?
+    private var workItem: DispatchWorkItem?
     private let stack:UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -95,7 +97,7 @@ public class ToastBanner {
     }()
     
     private var banner:UIView? = nil
-   public func show(title:String = "" , message:String , style:BannerStyle , position:BannerPosition){
+    public func show(title:String = "" , message:String , style:BannerStyle , position:BannerPosition){
         guard let window = getWindowView() else {return}
         if settings == nil {
             settings = BannerSettings(theme: DefaultBannerStyle())
@@ -126,10 +128,26 @@ public class ToastBanner {
         case .none:
             break
         }
-       let swipGes = UISwipeGestureRecognizer(target: self, action: #selector(bannerSwipeGes))
-       swipGes.direction = settings?.position == .Bottom ? .down : .up
-       banner?.addGestureRecognizer(swipGes)
-       let haptic =  UIImpactFeedbackGenerator(style: .medium)
+        let swipGes = UISwipeGestureRecognizer(target: self, action: #selector(bannerSwipeGes))
+        swipGes.direction = settings?.position == .Bottom ? .down : .up
+        banner?.addGestureRecognizer(swipGes)
+        let generator = UINotificationFeedbackGenerator()
+        switch style {
+        case .error:
+            generator.notificationOccurred(.error)
+            break
+        case .info:
+            generator.notificationOccurred(.warning)
+            break
+        case .warning:
+            generator.notificationOccurred(.warning)
+            break
+        case .success:
+            generator.notificationOccurred(.success)
+            break
+        }
+            
+        let haptic =  UIImpactFeedbackGenerator(style: .medium)
         haptic.impactOccurred()
         UIView.animate(
             withDuration: 0.5,
@@ -140,10 +158,11 @@ public class ToastBanner {
             animations: {
                 self.banner!.transform = CGAffineTransform(translationX: 0, y: self.settings!.position == .Bottom ?  self.banner!.frame.origin.y - 190 : self.banner!.frame.origin.y + 190)
                 
-                let time = DispatchTimeInterval.seconds(self.settings?.theme.time ?? 3)
-                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
+                self.workItem = DispatchWorkItem {
                     self.dismiss()
                 }
+                let time = DispatchTimeInterval.seconds(self.settings?.theme.time ?? 3)
+                DispatchQueue.main.asyncAfter(deadline: .now() + time , execute: self.workItem!)
             })
         titleLbl.text = title
         messageLbl.text = message
@@ -154,7 +173,8 @@ public class ToastBanner {
         self.dismiss()
     }
     
-   public func dismiss(){
+    public func dismiss(){
+        workItem?.cancel()
         UIView.animate(
             withDuration: 0.5,
             delay: 0.0,
@@ -206,7 +226,7 @@ public class ToastBanner {
         contentStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor , constant: -6).isActive = true
         contentStack.topAnchor.constraint(equalTo: contentView.topAnchor , constant: 6).isActive = true
         contentStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor , constant: -6).isActive = true
-       
+        
         contentStack.addArrangedSubview(titleLbl)
         contentStack.addArrangedSubview(messageLbl)
         titleLbl.heightAnchor.constraint(equalToConstant: 32).isActive = true
