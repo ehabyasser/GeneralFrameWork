@@ -99,19 +99,18 @@ public class ToastBanner {
     private var banner:UIView? = nil
     public func show(title:String = "" , message:String , style:BannerStyle , position:BannerPosition){
         
-        guard let window = getWindowView() else {return}
-        if settings == nil {
-            settings = BannerSettings(theme: DefaultBannerStyle())
-        }
-        settings?.position = position
-        settings?.theme.style = style
-        if banner != nil {
-            banner?.removeFromSuperview()
-        }
-        
         DispatchQueue.global(qos: .userInitiated).async {
-            self.banner = self.design()
             DispatchQueue.main.async {
+                guard let window = self.getWindowView() else {return}
+                if self.settings == nil {
+                    self.settings = BannerSettings(theme: DefaultBannerStyle())
+                }
+                self.settings?.position = position
+                self.settings?.theme.style = style
+                if self.banner != nil {
+                    self.banner?.removeFromSuperview()
+                }
+                self.banner = self.design()
                 window.addSubview(self.banner!)
                 self.banner!.leadingAnchor.constraint(equalTo: window.leadingAnchor , constant: 20).isActive = true
                 self.banner!.trailingAnchor.constraint(equalTo: window.trailingAnchor , constant: -20).isActive = true
@@ -150,7 +149,7 @@ public class ToastBanner {
                     generator.notificationOccurred(.success)
                     break
                 }
-                    
+                
                 let haptic =  UIImpactFeedbackGenerator(style: .medium)
                 haptic.impactOccurred()
                 UIView.animate(
@@ -257,6 +256,7 @@ public class ToastBanner {
     
     
 }
+
 
 
 
