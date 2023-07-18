@@ -98,6 +98,7 @@ public class ToastBanner {
     
     private var banner:UIView? = nil
     public func show(title:String = "" , message:String , style:BannerStyle , position:BannerPosition){
+        
         guard let window = getWindowView() else {return}
         if settings == nil {
             settings = BannerSettings(theme: DefaultBannerStyle())
@@ -107,66 +108,70 @@ public class ToastBanner {
         if banner != nil {
             banner?.removeFromSuperview()
         }
-        banner = design()
-        window.addSubview(banner!)
-        banner!.leadingAnchor.constraint(equalTo: window.leadingAnchor , constant: 20).isActive = true
-        banner!.trailingAnchor.constraint(equalTo: window.trailingAnchor , constant: -20).isActive = true
-        banner!.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        if title.isEmpty {
-            titleLbl.isHidden = true
-        }
-        if message.isEmpty {
-            messageLbl.isHidden = true
-        }
-        switch settings?.position {
-        case .Bottom:
-            banner!.bottomAnchor.constraint(equalTo: window.bottomAnchor , constant: 120).isActive = true
-            break
-        case .Top:
-            banner!.topAnchor.constraint(equalTo: window.topAnchor , constant: -120).isActive = true
-            break
-        case .none:
-            break
-        }
-        let swipGes = UISwipeGestureRecognizer(target: self, action: #selector(bannerSwipeGes))
-        swipGes.direction = settings?.position == .Bottom ? .down : .up
-        banner?.addGestureRecognizer(swipGes)
-        let generator = UINotificationFeedbackGenerator()
-        switch style {
-        case .error:
-            generator.notificationOccurred(.error)
-            break
-        case .info:
-            generator.notificationOccurred(.warning)
-            break
-        case .warning:
-            generator.notificationOccurred(.warning)
-            break
-        case .success:
-            generator.notificationOccurred(.success)
-            break
-        }
-            
-        let haptic =  UIImpactFeedbackGenerator(style: .medium)
-        haptic.impactOccurred()
-        UIView.animate(
-            withDuration: 0.5,
-            delay: 0.0,
-            usingSpringWithDamping: 0.7,
-            initialSpringVelocity: 1,
-            options: [],
-            animations: {
-                self.banner!.transform = CGAffineTransform(translationX: 0, y: self.settings!.position == .Bottom ?  self.banner!.frame.origin.y - 190 : self.banner!.frame.origin.y + 190)
-                
-                self.workItem = DispatchWorkItem {
-                    self.dismiss()
-                }
-                let time = DispatchTimeInterval.seconds(self.settings?.theme.time ?? 3)
-                DispatchQueue.main.asyncAfter(deadline: .now() + time , execute: self.workItem!)
-            })
-        titleLbl.text = title
-        messageLbl.text = message
         
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.banner = self.design()
+            DispatchQueue.main.async {
+                window.addSubview(self.banner!)
+                self.banner!.leadingAnchor.constraint(equalTo: window.leadingAnchor , constant: 20).isActive = true
+                self.banner!.trailingAnchor.constraint(equalTo: window.trailingAnchor , constant: -20).isActive = true
+                self.banner!.heightAnchor.constraint(equalToConstant: 70).isActive = true
+                if title.isEmpty {
+                    self.titleLbl.isHidden = true
+                }
+                if message.isEmpty {
+                    self.messageLbl.isHidden = true
+                }
+                switch self.settings?.position {
+                case .Bottom:
+                    self.banner!.bottomAnchor.constraint(equalTo: window.bottomAnchor , constant: 120).isActive = true
+                    break
+                case .Top:
+                    self.banner!.topAnchor.constraint(equalTo: window.topAnchor , constant: -120).isActive = true
+                    break
+                case .none:
+                    break
+                }
+                let swipGes = UISwipeGestureRecognizer(target: self, action: #selector(self.bannerSwipeGes))
+                swipGes.direction = self.settings?.position == .Bottom ? .down : .up
+                self.banner?.addGestureRecognizer(swipGes)
+                let generator = UINotificationFeedbackGenerator()
+                switch style {
+                case .error:
+                    generator.notificationOccurred(.error)
+                    break
+                case .info:
+                    generator.notificationOccurred(.warning)
+                    break
+                case .warning:
+                    generator.notificationOccurred(.warning)
+                    break
+                case .success:
+                    generator.notificationOccurred(.success)
+                    break
+                }
+                    
+                let haptic =  UIImpactFeedbackGenerator(style: .medium)
+                haptic.impactOccurred()
+                UIView.animate(
+                    withDuration: 0.5,
+                    delay: 0.0,
+                    usingSpringWithDamping: 0.7,
+                    initialSpringVelocity: 1,
+                    options: [],
+                    animations: {
+                        self.banner!.transform = CGAffineTransform(translationX: 0, y: self.settings!.position == .Bottom ?  self.banner!.frame.origin.y - 190 : self.banner!.frame.origin.y + 190)
+                        
+                        self.workItem = DispatchWorkItem {
+                            self.dismiss()
+                        }
+                        let time = DispatchTimeInterval.seconds(self.settings?.theme.time ?? 3)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + time , execute: self.workItem!)
+                    })
+                self.titleLbl.text = title
+                self.messageLbl.text = message
+            }
+        }
     }
     
     @objc private func bannerSwipeGes(){
