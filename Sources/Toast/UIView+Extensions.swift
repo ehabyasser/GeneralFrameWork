@@ -29,36 +29,49 @@ extension UIView {
         return "shimmer"
     }
     
-
+    
     
     private func startShimmering() {
-        backgroundColor = UIColor.lightGray
-        let white = UIColor.lightGray.withAlphaComponent(0.5).cgColor
-        let alpha = UIColor.lightGray.withAlphaComponent(0.7).cgColor
-        let width = bounds.width
-        let height = bounds.height
+        let currentShimmerLayer = layer.sublayers?.first(where: { $0.name == shimmerAnimationKey })
+        if currentShimmerLayer != nil { return }
         
-        let gradient = CAGradientLayer()
-        gradient.colors = [white, alpha, white]
-        gradient.startPoint = CGPoint(x: 0.0, y: 0)
-        gradient.endPoint = CGPoint(x: 1.0, y: 0)
-        gradient.locations = [0, 1]
-        gradient.frame = CGRect(x: -width, y: 0, width: width*3, height: height)
-        layer.mask = gradient
+        let baseShimmeringColor: UIColor? = .lightGray//UIColor(red: 202/255, green: 201/255, blue: 206/255, alpha: 1)
+        guard let color = baseShimmeringColor else {
+            print("⚠️ Warning: `viewBackgroundColor` can not be nil while calling `setShimmeringAnimation`")
+            return
+        }
         
-        let animation = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.locations))
-        animation.fromValue = [0.0, 0.1, 0.2]
-        animation.toValue = [0.8, 0.9, 1.0]
-        animation.duration = 2
+        // MARK: - Shimmering Layer
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.name = shimmerAnimationKey
+        gradientLayer.frame = getFrame()
+        gradientLayer.cornerRadius = min(bounds.height / 2, 0)
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 1.0)
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
+        let gradientColorOne = color.withAlphaComponent(0.5).cgColor
+        let gradientColorTwo = color.withAlphaComponent(0.8).cgColor
+        gradientLayer.colors = [gradientColorOne, gradientColorTwo, gradientColorOne]
+        gradientLayer.locations = [0.0, 0.5, 1.0]
+        layer.addSublayer(gradientLayer)
+        gradientLayer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
+        
+        // MARK: - Shimmer Animation
+        let animation = CABasicAnimation(keyPath: "locations")
+        animation.fromValue = [-1.0, -0.5, 0.0]
+        animation.toValue = [1.0, 1.5, 2.0]
         animation.repeatCount = .infinity
-        gradient.add(animation, forKey: shimmerAnimationKey)
+        animation.duration = 2
+        gradientLayer.add(animation, forKey: animation.keyPath)
     }
     
     private func stopShimmering() {
-        layer.mask = nil
-        self.backgroundColor = .clear
+        let currentShimmerLayer = layer.sublayers?.first(where: { $0.name == shimmerAnimationKey })
+        currentShimmerLayer?.removeFromSuperlayer()
     }
-
+    
+    private func getFrame() -> CGRect {
+        return bounds
+    }
 
     func dropShadow() {
         layer.masksToBounds = false
