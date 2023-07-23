@@ -37,4 +37,5 @@ public enum HTTPError: Error {
     case serviceUnavailable // 503
     case gatewayTimeout // 504
     case unknown(Int)
+    case NoInternet
 }
