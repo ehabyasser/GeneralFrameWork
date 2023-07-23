@@ -12,7 +12,7 @@ class NetworkOperation:AsyncOpration {
     var isConnected:Bool = true
     
     override func performAsyncTask() {
-        super.performAsyncTask()
+        //super.performAsyncTask()
         NotificationCenter.default.addObserver(self, selector: #selector(networkChanged), name: .networkStatusChanged, object: nil)
         NetworkManager.shared.startMonitoring()
     }
