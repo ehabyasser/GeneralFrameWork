@@ -73,7 +73,7 @@ class RequestOperation<T:Decodable>:Operation {
                 do {
                     guard let data = data else {self?.completion(.failure(.invalidData)); return}
                     let model = try JSONDecoder().decode(T.self, from: data)
-                    self?.completion(.success(model))
+                    self!.completion(.success(model))
                 } catch {
                     self?.completion(.failure(.jsonParsingFailure))
                 }
