@@ -31,7 +31,7 @@ class RequestOperation<T:Decodable>:Operation {
     
     public func request() {
         
-        if !NetworkManager.shared.isConnected {completion(.failure(.NoInternet)); return}
+       // if !NetworkManager.shared.isConnected {completion(.failure(.NoInternet)); return}
         guard let url = URL(string: url) else {  completion(.failure(.invalidURL)); return}
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
