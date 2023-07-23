@@ -6,13 +6,12 @@
 //
 
 import Foundation
-import UIKit
-
 
 public typealias CompletionHandler<T: Decodable> = (Result<T, HTTPError>) -> Void
 
 public class HTTPClient {
     public static let shared = HTTPClient()
+    let queue = OperationQueue()
     public func request<T: Decodable>(url: String,
                                       method: HttpMethod = .get,
                                       headers: [String: String]? = nil,
@@ -20,22 +19,7 @@ public class HTTPClient {
                                       completion: @escaping CompletionHandler<T>) {
         DispatchQueue.global().async {
             let requestOperation = RequestOperation<T>(url: url , method: method , headers: headers , body: body , completion: completion)
-//            networkOperation.completionBlock = {
-//                if networkOperation.isConnected {
-//                    requestOperation.start()
-//                }else{
-//                    if #available(iOS 13.0, *) {
-//                        ToastBanner.shared.show(message: "No Internet connection", style: .error, position: .Bottom)
-//                    } else {
-//                        print("no internet connection")
-//                    }
-//                    completion(.failure(.NoInternet))
-//                    requestOperation.cancel()
-//                }
-//            }
-            requestOperation.start()
-//            requestOperation.addDependency(networkOperation)
-//            self.queue.addOperations([networkOperation , requestOperation], waitUntilFinished: true)
+            self.queue.addOperations([requestOperation], waitUntilFinished: true)
         }
     }
     
