@@ -39,8 +39,8 @@ class RequestOperation<T:Decodable>:Operation {
         request.allHTTPHeaderFields = headers
         request.httpBody = body
         
-        let task = URLSession.shared.dataTask(with: request) {  [weak self] data, response, error in
-            guard let self = self else {return}
+        let task = URLSession.shared.dataTask(with: request) {   data, response, error in
+            //guard let self = self else {return}
             guard let httpResponse = response as? HTTPURLResponse else {
                 self.completion(.failure(.invalidResponse))
                 return
