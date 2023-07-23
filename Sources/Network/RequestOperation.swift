@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RequestOperation<T:Decodable>:AsyncOpration {
+class RequestOperation<T:Decodable>:Operation {
     
     let url: String
     let method: HttpMethod
@@ -23,15 +23,16 @@ class RequestOperation<T:Decodable>:AsyncOpration {
         self.completion = completion
     }
     
-    
-    override func performAsyncTask() {
-        //super.performAsyncTask()
+    override func main() {
+        NetworkManager.shared.startMonitoring()
         request()
     }
+
     
     public func request() {
-        guard let url = URL(string: url) else {  completion(.failure(.invalidURL)); return}
         
+        if !NetworkManager.shared.isConnected {completion(.failure(.NoInternet)); return}
+        guard let url = URL(string: url) else {  completion(.failure(.invalidURL)); return}
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = headers
@@ -39,7 +40,6 @@ class RequestOperation<T:Decodable>:AsyncOpration {
         
         let task = URLSession.shared.dataTask(with: request) {  [weak self] data, response, error in
             guard let self = self else {return}
-            self.finish()
             guard let httpResponse = response as? HTTPURLResponse else {
                 self.completion(.failure(.invalidResponse))
                 return
