@@ -26,10 +26,13 @@ class RequestOperation<T:Decodable> {
     }
     
     @objc private func networkChanged(){
-        if #available(iOS 13.0, *) {
-            ToastBanner.shared.show(message: "Check your internet connection.", style: .error, position: .Bottom)
-        } else {
-            print("Check your internet connection.")
+        if !NetworkManager.shared.isConnected {
+            completion(.failure(.NoInternet))
+            if #available(iOS 13.0, *) {
+                ToastBanner.shared.show(message: "Check your internet connection.", style: .error, position: .Bottom)
+            } else {
+                print("Check your internet connection.")
+            }
         }
     }
     
