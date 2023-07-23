@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RequestOperation<T:Decodable>:Operation {
+class RequestOperation<T:Decodable>:AsyncOpration {
     
     let url: String
     let method: HttpMethod
