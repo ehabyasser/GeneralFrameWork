@@ -7,7 +7,7 @@
 
 import Foundation
 
-class NetworkOperation:Operation {
+class NetworkOperation:AsyncOpration {
     
     var isConnected:Bool = true
     
