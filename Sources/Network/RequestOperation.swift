@@ -23,13 +23,11 @@ class RequestOperation<T:Decodable>:AsyncOpration {
         self.completion = completion
     }
     
-    override func main() {
-        if isCancelled {
-            return
-        }
+    
+    override func performAsyncTask() {
+        super.performAsyncTask()
         request()
     }
-    
     
     public func request() {
         guard let url = URL(string: url) else {  completion(.failure(.invalidURL)); return}
@@ -39,8 +37,9 @@ class RequestOperation<T:Decodable>:AsyncOpration {
         request.allHTTPHeaderFields = headers
         request.httpBody = body
         
-        let task = URLSession.shared.dataTask(with: request) {   data, response, error in
-            //guard let self = self else {return}
+        let task = URLSession.shared.dataTask(with: request) {  [weak self] data, response, error in
+            guard let self = self else {return}
+            self.finish()
             guard let httpResponse = response as? HTTPURLResponse else {
                 self.completion(.failure(.invalidResponse))
                 return
