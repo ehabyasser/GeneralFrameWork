@@ -21,6 +21,7 @@ class RequestOperation<T:Decodable> {
         self.headers = headers
         self.body = body
         self.completion = completion
+        NetworkManager.shared.startMonitoring()
     }
     
 //    override func main() {
