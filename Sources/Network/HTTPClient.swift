@@ -25,6 +25,7 @@ public class HTTPClient {
             networkOperation.completionBlock = {
                 if networkOperation.isConnected {
                     requestOperation.start()
+                    networkOperation.cancel()
                 }else{
                     if #available(iOS 13.0, *) {
                         ToastBanner.shared.show(message: "No Internet connection", style: .error, position: .Bottom)
