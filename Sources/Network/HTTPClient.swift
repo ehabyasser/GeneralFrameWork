@@ -19,7 +19,7 @@ public class HTTPClient {
                                       completion: @escaping CompletionHandler<T>) {
         DispatchQueue.global().async {
             let requestOperation = RequestOperation<T>(url: url , method: method , headers: headers , body: body , completion: completion)
-            requestOperation.start()
+            requestOperation.request()
         }
     }
     
