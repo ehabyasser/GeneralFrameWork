@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RequestOperation<T:Decodable> {
+class RequestOperation<T:Decodable>:Operation {
     
     let url: String
     let method: HttpMethod
@@ -21,8 +21,8 @@ class RequestOperation<T:Decodable> {
         self.headers = headers
         self.body = body
         self.completion = completion
-        //NetworkManager.shared.startMonitoring()
-        NotificationCenter.default.addObserver(self, selector: #selector(networkChanged), name: .networkStatusChanged, object: nil)
+        NetworkManager.shared.startMonitoring()
+        
     }
     
     @objc private func networkChanged(){
@@ -36,10 +36,11 @@ class RequestOperation<T:Decodable> {
         }
     }
     
-//    override func main() {
-//       // NetworkManager.shared.startMonitoring()
-//        request()
-//    }
+    override func main() {
+        NetworkManager.shared.startMonitoring()
+        request()
+        NotificationCenter.default.addObserver(self, selector: #selector(networkChanged), name: .networkStatusChanged, object: nil)
+    }
     
 
 
@@ -60,13 +61,13 @@ class RequestOperation<T:Decodable> {
         request.allHTTPHeaderFields = headers
         request.httpBody = body
         
-        let task = URLSession.shared.dataTask(with: request) {   data, response, error in
-            //guard let self = self else {return}
+        let task = URLSession.shared.dataTask(with: request) { [weak self]  data, response, error in
+            guard let self = self else {return}
             guard let httpResponse = response as? HTTPURLResponse else {
                 self.completion(.failure(.invalidResponse))
                 return
             }
-            print("response \(httpResponse.url?.absoluteString ?? "")")
+            
             switch httpResponse.statusCode {
             case 200...299:
                 do {
