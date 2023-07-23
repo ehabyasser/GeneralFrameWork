@@ -22,6 +22,15 @@ class RequestOperation<T:Decodable> {
         self.body = body
         self.completion = completion
         NetworkManager.shared.startMonitoring()
+        NotificationCenter.default.addObserver(self, selector: #selector(networkChanged), name: .networkStatusChanged, object: nil)
+    }
+    
+    @objc private func networkChanged(){
+        if #available(iOS 13.0, *) {
+            ToastBanner.shared.show(message: "Check your internet connection.", style: .error, position: .Bottom)
+        } else {
+            print("Check your internet connection.")
+        }
     }
     
 //    override func main() {
@@ -33,12 +42,14 @@ class RequestOperation<T:Decodable> {
 
     
     public func request() {
-        if !NetworkManager.shared.isConnected {completion(.failure(.NoInternet));
+        if !NetworkManager.shared.isConnected {
+            completion(.failure(.NoInternet))
             if #available(iOS 13.0, *) {
                 ToastBanner.shared.show(message: "Check your internet connection.", style: .error, position: .Bottom)
             } else {
                 print("Check your internet connection.")
             }
+            return
         }
         guard let url = URL(string: url) else {  completion(.failure(.invalidURL)); return}
         var request = URLRequest(url: url)
