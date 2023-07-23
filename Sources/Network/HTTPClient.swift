@@ -17,15 +17,8 @@ public class HTTPClient {
                                       headers: [String: String]? = nil,
                                       body: Data? = nil,
                                       completion: @escaping CompletionHandler<T>) {
-        DispatchQueue.global().async {
-            let requestOperation = RequestOperation<T>(url: url , method: method , headers: headers , body: body , completion: completion)
-            requestOperation.request()
-        }
+        let requestOperation = RequestOperation<T>(url: url , method: method , headers: headers , body: body , completion: completion)
+        requestOperation.request()
     }
     
 }
-
-
-
-
-
