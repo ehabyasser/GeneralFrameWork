@@ -56,35 +56,11 @@ class AsyncOpration: Operation {
 
     // MARK: Custom Asynchronous Task
 
-    private func performAsyncTask() {
-        // Perform your asynchronous task here, such as making an API call or fetching data
-        // For the sake of example, we'll simulate a delay using DispatchQueue
-
-        DispatchQueue.global().asyncAfter(deadline: .now()) { [weak self] in
-            guard let self = self else { return }
-
-            // Check if the operation is cancelled before proceeding with the result
-            guard !self.isCancelled else {
-                self.finish()
-                return
-            }
-
-            // Simulate a successful result
-            let result = "Async operation completed successfully."
-
-            // Call the completion block on the main queue
-            DispatchQueue.main.async {
-                // Handle the result, update UI, or perform any necessary post-processing
-                print(result)
-
-                // Mark the operation as finished
-                self.finish()
-            }
-        }
+    func performAsyncTask() {
     }
 
     // Helper method to mark the operation as finished and executing as false
-    private func finish() {
+    func finish() {
         // Mark the operation as finished
         willChangeValue(forKey: "isFinished")
         willChangeValue(forKey: "isExecuting")
