@@ -66,7 +66,7 @@ class RequestOperation<T:Decodable> {
                 self.completion(.failure(.invalidResponse))
                 return
             }
-            
+            print("response \(httpResponse.url?.absoluteString ?? "")")
             switch httpResponse.statusCode {
             case 200...299:
                 do {
