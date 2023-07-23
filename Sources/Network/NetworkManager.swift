@@ -12,7 +12,7 @@ public class NetworkManager {
     
     private var wifiReachability: SCNetworkReachability?
     private var cellularReachability: SCNetworkReachability?
-    public var isConnected:Bool = false
+    public var isConnected:Bool = true
     private init() {
         setupReachability()
     }
