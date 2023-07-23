@@ -21,7 +21,7 @@ class RequestOperation<T:Decodable> {
         self.headers = headers
         self.body = body
         self.completion = completion
-        NetworkManager.shared.startMonitoring()
+        //NetworkManager.shared.startMonitoring()
         NotificationCenter.default.addObserver(self, selector: #selector(networkChanged), name: .networkStatusChanged, object: nil)
     }
     
