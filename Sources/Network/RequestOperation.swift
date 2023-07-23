@@ -62,87 +62,87 @@ class RequestOperation<T:Decodable>:Operation {
         request.httpBody = body
         
         let task = URLSession.shared.dataTask(with: request) { [weak self]  data, response, error in
-            guard let self = self else {return}
+            
             guard let httpResponse = response as? HTTPURLResponse else {
-                self.completion(.failure(.invalidResponse))
+                self?.completion(.failure(.invalidResponse))
                 return
             }
             
             switch httpResponse.statusCode {
             case 200...299:
                 do {
-                    guard let data = data else {self.completion(.failure(.invalidData)); return}
+                    guard let data = data else {self?.completion(.failure(.invalidData)); return}
                     let model = try JSONDecoder().decode(T.self, from: data)
-                    self.completion(.success(model))
+                    self?.completion(.success(model))
                 } catch {
-                    self.completion(.failure(.jsonParsingFailure))
+                    self?.completion(.failure(.jsonParsingFailure))
                 }
                 break
             case 400:
-                self.completion(.failure(.badRequest))
+                self?.completion(.failure(.badRequest))
                 break
             case 401:
-                self.completion(.failure(.unauthorized))
+                self?.completion(.failure(.unauthorized))
                 break
             case 403:
-                self.completion(.failure(.forbidden))
+                self?.completion(.failure(.forbidden))
                 break
             case 404:
-                self.completion(.failure(.notFound))
+                self?.completion(.failure(.notFound))
                 break
             case 405:
-                self.completion(.failure(.methodNotAllowed))
+                self?.completion(.failure(.methodNotAllowed))
                 break
             case 408:
-                self.completion(.failure(.requestTimeout))
+                self?.completion(.failure(.requestTimeout))
                 break
             case 409:
-                self.completion(.failure(.conflict))
+                self?.completion(.failure(.conflict))
                 break
             case 410:
-                self.completion(.failure(.gone))
+                self?.completion(.failure(.gone))
                 break
             case 411:
-                self.completion(.failure(.lengthRequired))
+                self?.completion(.failure(.lengthRequired))
                 break
             case 412:
-                self.completion(.failure(.preconditionFailed))
+                self?.completion(.failure(.preconditionFailed))
                 break
             case 413:
-                self.completion(.failure(.payloadTooLarge))
+                self?.completion(.failure(.payloadTooLarge))
                 break
             case 414:
-                self.completion(.failure(.uriTooLong))
+                self?.completion(.failure(.uriTooLong))
                 break
             case 415:
-                self.completion(.failure(.unsupportedMediaType))
+                self?.completion(.failure(.unsupportedMediaType))
                 break
             case 416:
-                self.completion(.failure(.rangeNotSatisfiable))
+                self?.completion(.failure(.rangeNotSatisfiable))
                 break
             case 417:
-                self.completion(.failure(.expectationFailed))
+                self?.completion(.failure(.expectationFailed))
                 break
             case 418:
-                self.completion(.failure(.teapot))
+                self?.completion(.failure(.teapot))
                 break
             case 429:
-                self.completion(.failure(.tooManyRequests))
+                self?.completion(.failure(.tooManyRequests))
                 break
             case 500:
-                self.completion(.failure(.serverError))
+                self?.completion(.failure(.serverError))
                 break
             case 502:
-                self.completion(.failure(.badGateway))
+                self?.completion(.failure(.badGateway))
                 break
             case 503:
-                self.completion(.failure(.serviceUnavailable))
+                self?.completion(.failure(.serviceUnavailable))
                 break
             case 504:
-                self.completion(.failure(.gatewayTimeout))
+                self?.completion(.failure(.gatewayTimeout))
                 break
             default:
-                self.completion(.failure(.unknown(httpResponse.statusCode)))
+                self?.completion(.failure(.unknown(httpResponse.statusCode)))
                 break
             }
             
