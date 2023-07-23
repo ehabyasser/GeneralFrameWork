@@ -9,7 +9,6 @@ import Foundation
 class NetworkOperation:Operation {
     
     override func main() {
-        NetworkManager.shared.startMonitoring()
         NotificationCenter.default.addObserver(self, selector: #selector(networkChanged), name: .networkStatusChanged, object: nil)
     }
     
