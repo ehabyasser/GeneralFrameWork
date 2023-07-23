@@ -24,102 +24,107 @@ class RequestOperation<T:Decodable>:Operation {
     }
     
     override func main() {
-        NetworkManager.shared.startMonitoring()
-        request()
+        // NetworkManager.shared.startMonitoring()
+        request(completion:  completion)
     }
-
     
-    public func request() {
+    
+    
+    
+    public func request(completion: @escaping CompletionHandler<T>) {
         
-       // if !NetworkManager.shared.isConnected {completion(.failure(.NoInternet)); return}
+        // if !NetworkManager.shared.isConnected {completion(.failure(.NoInternet)); return}
         guard let url = URL(string: url) else {  completion(.failure(.invalidURL)); return}
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = headers
         request.httpBody = body
         
-        let task = URLSession.shared.dataTask(with: request) {  data, response, error in
+        let task = URLSession.shared.dataTask(with: request) {   data, response, error in
             //guard let self = self else {return}
+            if  self.isCancelled {
+                return
+            }
             guard let httpResponse = response as? HTTPURLResponse else {
-                self.completion(.failure(.invalidResponse))
+                completion(.failure(.invalidResponse))
                 return
             }
             
             switch httpResponse.statusCode {
             case 200...299:
                 do {
-                    guard let data = data else {self.completion(.failure(.invalidData)); return}
+                    guard let data = data else { completion(.failure(.invalidData)); return}
                     let model = try JSONDecoder().decode(T.self, from: data)
-                    self.completion(.success(model))
+                    completion(.success(model))
                 } catch {
-                    self.completion(.failure(.jsonParsingFailure))
+                     completion(.failure(.jsonParsingFailure))
                 }
                 break
             case 400:
-                self.completion(.failure(.badRequest))
+                 completion(.failure(.badRequest))
                 break
             case 401:
-                self.completion(.failure(.unauthorized))
+                 completion(.failure(.unauthorized))
                 break
             case 403:
-                self.completion(.failure(.forbidden))
+                 completion(.failure(.forbidden))
                 break
             case 404:
-                self.completion(.failure(.notFound))
+                 completion(.failure(.notFound))
                 break
             case 405:
-                self.completion(.failure(.methodNotAllowed))
+                 completion(.failure(.methodNotAllowed))
                 break
             case 408:
-                self.completion(.failure(.requestTimeout))
+                 completion(.failure(.requestTimeout))
                 break
             case 409:
-                self.completion(.failure(.conflict))
+                 completion(.failure(.conflict))
                 break
             case 410:
-                self.completion(.failure(.gone))
+                 completion(.failure(.gone))
                 break
             case 411:
-                self.completion(.failure(.lengthRequired))
+                 completion(.failure(.lengthRequired))
                 break
             case 412:
-                self.completion(.failure(.preconditionFailed))
+                 completion(.failure(.preconditionFailed))
                 break
             case 413:
-                self.completion(.failure(.payloadTooLarge))
+                 completion(.failure(.payloadTooLarge))
                 break
             case 414:
-                self.completion(.failure(.uriTooLong))
+                 completion(.failure(.uriTooLong))
                 break
             case 415:
-                self.completion(.failure(.unsupportedMediaType))
+                 completion(.failure(.unsupportedMediaType))
                 break
             case 416:
-                self.completion(.failure(.rangeNotSatisfiable))
+                 completion(.failure(.rangeNotSatisfiable))
                 break
             case 417:
-                self.completion(.failure(.expectationFailed))
+                 completion(.failure(.expectationFailed))
                 break
             case 418:
-                self.completion(.failure(.teapot))
+                 completion(.failure(.teapot))
                 break
             case 429:
-                self.completion(.failure(.tooManyRequests))
+                 completion(.failure(.tooManyRequests))
                 break
             case 500:
-                self.completion(.failure(.serverError))
+                 completion(.failure(.serverError))
                 break
             case 502:
-                self.completion(.failure(.badGateway))
+                 completion(.failure(.badGateway))
                 break
             case 503:
-                self.completion(.failure(.serviceUnavailable))
+                 completion(.failure(.serviceUnavailable))
                 break
             case 504:
-                self.completion(.failure(.gatewayTimeout))
+                 completion(.failure(.gatewayTimeout))
                 break
             default:
-                self.completion(.failure(.unknown(httpResponse.statusCode)))
+                 completion(.failure(.unknown(httpResponse.statusCode)))
                 break
             }
             
