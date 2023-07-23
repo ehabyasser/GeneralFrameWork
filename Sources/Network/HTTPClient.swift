@@ -11,7 +11,6 @@ public typealias CompletionHandler<T: Decodable> = (Result<T, HTTPError>) -> Voi
 
 public class HTTPClient {
     public static let shared = HTTPClient()
-    let queue = OperationQueue()
     public func request<T: Decodable>(url: String,
                                       method: HttpMethod = .get,
                                       headers: [String: String]? = nil,
