@@ -22,21 +22,22 @@ public class HTTPClient {
         DispatchQueue.global().async {
             let networkOperation = NetworkOperation()
             let requestOperation = RequestOperation<T>(url: url , method: method , headers: headers , body: body , completion: completion)
-//            networkOperation.completionBlock = {
-//                if networkOperation.isConnected {
-//                    requestOperation.start()
-//                }else{
-//                    if #available(iOS 13.0, *) {
-//                        ToastBanner.shared.show(message: "No Internet connection", style: .error, position: .Bottom)
-//                    } else {
-//                        print("no internet connection")
-//                    }
-//                    completion(.failure(.NoInternet))
-//                    requestOperation.cancel()
-//                }
-//            }
-            requestOperation.addDependency(networkOperation)
-            self.queue.addOperations([networkOperation , requestOperation], waitUntilFinished: true)
+            networkOperation.completionBlock = {
+                if networkOperation.isConnected {
+                    requestOperation.start()
+                }else{
+                    if #available(iOS 13.0, *) {
+                        ToastBanner.shared.show(message: "No Internet connection", style: .error, position: .Bottom)
+                    } else {
+                        print("no internet connection")
+                    }
+                    completion(.failure(.NoInternet))
+                    requestOperation.cancel()
+                }
+            }
+            networkOperation.start()
+//            requestOperation.addDependency(networkOperation)
+//            self.queue.addOperations([networkOperation , requestOperation], waitUntilFinished: true)
         }
     }
     
