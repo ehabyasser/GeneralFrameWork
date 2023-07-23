@@ -25,7 +25,7 @@ class RequestOperation<T:Decodable>:AsyncOpration {
     
     
     override func performAsyncTask() {
-        super.performAsyncTask()
+        //super.performAsyncTask()
         request()
     }
     
