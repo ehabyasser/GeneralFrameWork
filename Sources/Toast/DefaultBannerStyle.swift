@@ -22,6 +22,8 @@ class DefaultBannerStyle: BannerTheme {
             return UIImage(systemName: "info.circle")
         case .success:
             return UIImage(systemName: "checkmark.circle")
+        case .noInternet:
+            return UIImage(systemName: "exclamationmark.icloud")
         }
     }
     
@@ -35,6 +37,8 @@ class DefaultBannerStyle: BannerTheme {
             return .white
         case .success:
             return .white
+        case .noInternet:
+            return .label
         }
     }
     
@@ -48,6 +52,8 @@ class DefaultBannerStyle: BannerTheme {
             return .label
         case .success:
             return .systemGreen
+        case .noInternet:
+            return .systemBackground
         }
     }
     
@@ -61,6 +67,8 @@ class DefaultBannerStyle: BannerTheme {
             return .systemBackground
         case .success:
             return .white
+        case .noInternet:
+            return .label
         }
     }
     
@@ -74,6 +82,8 @@ class DefaultBannerStyle: BannerTheme {
             return .systemBackground
         case .success:
             return .white
+        case .noInternet:
+            return .label
         }
     }
     
