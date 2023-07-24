@@ -33,7 +33,7 @@ class RequestOperation<T:Decodable>:Operation {
             completion(.failure(.NoInternet))
             if #available(iOS 13.0, *) {
                 DispatchQueue.main.async {
-                    ToastBanner.shared.show(message: "Check your internet connection.", style: .noInternet, position: .Bottom)
+                    ToastBanner.shared.show(message: "No internet connection.", style: .noInternet, position: .Bottom)
                 }
             } else {
                 print("Check your internet connection.")
