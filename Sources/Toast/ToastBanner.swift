@@ -25,6 +25,7 @@ public enum BannerStyle{
     case warning
     case info
     case success
+    case noInternet
 }
 
 @available(iOS 13.0, *)
@@ -147,6 +148,9 @@ public class ToastBanner {
                     break
                 case .success:
                     generator.notificationOccurred(.success)
+                    break
+                case .noInternet:
+                    generator.notificationOccurred(.warning)
                     break
                 }
                 
