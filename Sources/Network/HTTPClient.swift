@@ -18,16 +18,9 @@ public class HTTPClient {
                                       body: Data? = nil,
                                       completion: @escaping CompletionHandler<T>) {
         DispatchQueue.global().async {
-            let networkOperation = NetworkOperation()
             let requestOperation = RequestOperation<T>(url: url , method: method , headers: headers , body: body , completion: completion)
-            requestOperation.addDependency(networkOperation)
-            self.queue.addOperations([networkOperation , requestOperation], waitUntilFinished: true)
+            self.queue.addOperations([requestOperation], waitUntilFinished: true)
         }
     }
     
 }
-
-
-
-
-
