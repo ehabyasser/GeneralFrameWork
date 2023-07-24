@@ -38,7 +38,7 @@ class DefaultBannerStyle: BannerTheme {
         case .success:
             return .white
         case .noInternet:
-            return .label
+            return .systemBackground
         }
     }
     
@@ -53,7 +53,7 @@ class DefaultBannerStyle: BannerTheme {
         case .success:
             return .systemGreen
         case .noInternet:
-            return .systemBackground
+            return .label
         }
     }
     
@@ -68,7 +68,7 @@ class DefaultBannerStyle: BannerTheme {
         case .success:
             return .white
         case .noInternet:
-            return .label
+            return .systemBackground
         }
     }
     
@@ -83,7 +83,7 @@ class DefaultBannerStyle: BannerTheme {
         case .success:
             return .white
         case .noInternet:
-            return .label
+            return .systemBackground
         }
     }
     
