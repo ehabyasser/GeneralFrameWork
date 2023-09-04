@@ -65,6 +65,4 @@ extension Encodable {
             return nil
         }
     }
-    
-    
 }

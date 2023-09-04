@@ -47,7 +47,7 @@ class RequestOperation<T:Decodable>:Operation {
         request.allHTTPHeaderFields = headers
         request.httpBody = body
         if let data  = body {
-            Logger.log(.info, message: "Body \(String(decoding: data, as: UTF8.self))")
+            Logger.log(.info, message: "Body \(String(decoding: data, as: UTF8.self).replacingOccurrences(of: "\"", with: ""))")
         }
         
         if let headers = headers {
@@ -63,7 +63,7 @@ class RequestOperation<T:Decodable>:Operation {
             }
             Logger.log(.info, message: "\(httpResponse.statusCode) \(httpResponse.url?.absoluteString ?? "")")
             if let data = data {
-                Logger.log(.info, message: String(decoding: data, as: UTF8.self))
+                Logger.log(.info, message: String(decoding: data, as: UTF8.self).replacingOccurrences(of: "\"", with: ""))
             }
             
             switch httpResponse.statusCode {
