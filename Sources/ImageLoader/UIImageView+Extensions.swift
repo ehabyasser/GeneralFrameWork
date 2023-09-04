@@ -21,7 +21,7 @@ extension UIImageView{
         }
     }
     
-    func downloadImg(imgPath:String , size:CGSize, placeholder:UIImage? = UIImage(named: "logo")){
+   public func downloadImg(imgPath:String , size:CGSize, placeholder:UIImage? = UIImage(named: "logo")){
         
         download(imagePath: imgPath, size: size , placeholder: placeholder)
     }
