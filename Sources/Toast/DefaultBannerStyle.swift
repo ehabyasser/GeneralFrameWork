@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Ihab yasser on 16/07/2023.
 //
@@ -105,4 +105,3 @@ class DefaultBannerStyle: BannerTheme {
     var iconSize: CGFloat = 32
     
 }
-

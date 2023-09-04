@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Ihab yasser on 23/07/2023.
 //
@@ -23,7 +23,7 @@ class RequestOperation<T:Decodable>:Operation {
         self.completion = completion
         
     }
-
+    
     override func main() {
         request(completion: completion)
     }
@@ -33,24 +33,37 @@ class RequestOperation<T:Decodable>:Operation {
             completion(.failure(.NoInternet))
             if #available(iOS 13.0, *) {
                 DispatchQueue.main.async {
-                    ToastBanner.shared.show(message: "No internet connection.", style: .noInternet, position: .Bottom)
+                    ToastBanner.shared.show(message: "Check your internet connection.", style: .noInternet, position: .Bottom)
                 }
             } else {
-                print("Check your internet connection.")
+                Logger.log(.info, message: "Check your internet connection.")
             }
             return
         }
         guard let url = URL(string: url) else {  completion(.failure(.invalidURL)); return}
+        Logger.log(.info, message: url)
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = headers
         request.httpBody = body
+        if let data  = body {
+            Logger.log(.info, message: "Body \(String(decoding: data, as: UTF8.self))")
+        }
+        
+        if let headers = headers {
+            Logger.log(.info, message: "Headers \(headers)")
+        }
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(.invalidResponse))
+                Logger.log(.info, message: "invalid response")
                 return
+            }
+            Logger.log(.info, message: "\(httpResponse.statusCode) \(httpResponse.url?.absoluteString ?? "")")
+            if let data = data {
+                Logger.log(.info, message: String(decoding: data, as: UTF8.self))
             }
             
             switch httpResponse.statusCode {

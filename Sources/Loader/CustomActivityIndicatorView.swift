@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Ihab yasser on 21/04/2023.
 //
@@ -33,7 +33,7 @@ class CustomActivityIndicatorView: UIView {
         let animation = LottieAnimation.named(animationName ?? "")
         animationView.animation = animation
         animationView.loopMode = .loop
-        animationView.contentMode = .scaleAspectFill
+        animationView.contentMode = .scaleAspectFit
         addSubview(animationView)
         
         // Add constraints to make the animation view fill the entire view
