@@ -41,9 +41,9 @@ open class Logger: NSObject {
     
     static func log(_ level:Level , message:Any){
         if message is Codable {
-            debugPrint(level.toIcon() , (message as? Codable)?.convertToString ?? "")
+            print(level.toIcon() , (message as? Codable)?.convertToString ?? "")
         }else if message is String {
-            debugPrint(level.toIcon() , (message as? String) ?? "")
+            print(level.toIcon() , (message as? String) ?? "")
         }else {
             debugPrint(level.toIcon() , message)
         }
