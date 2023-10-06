@@ -9,7 +9,7 @@ import Foundation
 
 public class NetworkManager: NSObject {
     
-    static let shared = NetworkManager()
+   public static let shared = NetworkManager()
     
     private var reachability:Reachability?
     
