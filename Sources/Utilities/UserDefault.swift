@@ -10,7 +10,7 @@ import Foundation
 
 
 @propertyWrapper
-struct UserDefault<T> {
+public struct UserDefault<T> {
     let key: String
     let defaultValue: T
     
@@ -19,7 +19,7 @@ struct UserDefault<T> {
         self.defaultValue = defaultValue
     }
     
-    var wrappedValue: T {
+    public var wrappedValue: T {
         get {
             return UserDefaults.standard.object(forKey: key) as?T ?? defaultValue
         }
@@ -30,7 +30,7 @@ struct UserDefault<T> {
 }
 
 @propertyWrapper
-struct CodableUserDefault<T:Codable> {
+public struct CodableUserDefault<T:Codable> {
     let key: String
     let defaultValue: T
     
@@ -40,7 +40,7 @@ struct CodableUserDefault<T:Codable> {
     }
     
     
-    var wrappedValue: T {
+    public var wrappedValue: T {
         get {
             let string = UserDefaults.standard.string(forKey: key) ?? ""
             let objc = try? JSONDecoder().decode(T.self, from: string.data(using: .utf8)!)
