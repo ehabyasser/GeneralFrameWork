@@ -44,8 +44,6 @@ open class Logger: NSObject {
             print(level.toIcon() , ((message as? Codable)?.convertToString ?? "").replacingOccurrences(of: "\"", with: ""))
         }else if message is String {
             print(level.toIcon() , ((message as? String) ?? "").replacingOccurrences(of: "\"", with: ""))
-        }else {
-            debugPrint(level.toIcon() , message.replacingOccurrences(of: "\"", with: ""))
         }
     }
 }
