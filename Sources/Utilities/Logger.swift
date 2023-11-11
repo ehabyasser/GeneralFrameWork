@@ -41,11 +41,11 @@ open class Logger: NSObject {
     
     static func log(_ level:Level , message:Any){
         if message is Codable {
-            print(level.toIcon() , (message as? Codable)?.convertToString ?? "")
+            print(level.toIcon() , ((message as? Codable)?.convertToString ?? "").replacingOccurrences(of: "\"", with: "", options: NSString.CompareOptions.literal, range:nil))
         }else if message is String {
-            print(level.toIcon() , (message as? String) ?? "")
+            print(level.toIcon() , ((message as? String) ?? "").replacingOccurrences(of: "\"", with: "", options: NSString.CompareOptions.literal, range:nil))
         }else {
-            debugPrint(level.toIcon() , message)
+            debugPrint(level.toIcon() , message.replacingOccurrences(of: "\"", with: "", options: NSString.CompareOptions.literal, range:nil))
         }
     }
 }
