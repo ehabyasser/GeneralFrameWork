@@ -22,7 +22,7 @@ public extension UIImageView{
     }
     
 
-    public func download(imagePath:String , size:CGSize, placeholder:UIImage? = UIImage(named: "logo")) {
+ func download(imagePath:String , size:CGSize, placeholder:UIImage? = UIImage(named: "logo")) {
         currentTask?.cancel()
         self.image = placeholder
         if let image = ImageCacheManager.shared.image(forKey: imagePath) {
@@ -58,7 +58,7 @@ public extension UIImageView{
 }
 
 public extension UIImage {
-   public func scaleImage(toSize newSize: CGSize) -> UIImage? {
+     func scaleImage(toSize newSize: CGSize) -> UIImage? {
         var newImage: UIImage?
         let newRect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height).integral
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
