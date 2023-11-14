@@ -8,10 +8,10 @@
 import Foundation
 import UIKit
 
-class MemoryManager {
-    static let shared = MemoryManager()
+public class MemoryManager {
+    public static let shared = MemoryManager()
     
-    func start(){
+   public func start(){
         subscribeToMemoryWarningNotifications()
     }
     
