@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-extension UIImageView{
+public extension UIImageView{
     
     private static var taskKey: UInt8 = 0
     
@@ -22,7 +22,7 @@ extension UIImageView{
     }
     
 
-    func download(imagePath:String , size:CGSize, placeholder:UIImage? = UIImage(named: "logo")) {
+    public func download(imagePath:String , size:CGSize, placeholder:UIImage? = UIImage(named: "logo")) {
         currentTask?.cancel()
         self.image = placeholder
         if let image = ImageCacheManager.shared.image(forKey: imagePath) {
@@ -57,8 +57,8 @@ extension UIImageView{
     
 }
 
-extension UIImage {
-    func scaleImage(toSize newSize: CGSize) -> UIImage? {
+public extension UIImage {
+   public func scaleImage(toSize newSize: CGSize) -> UIImage? {
         var newImage: UIImage?
         let newRect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height).integral
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
