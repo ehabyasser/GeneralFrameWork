@@ -25,6 +25,7 @@ public struct UserDefault<T> {
         }
         set {
             UserDefaults.standard.setValue(newValue, forKey: key)
+            UserDefaults.standard.synchronize()
         }
     }
 }
