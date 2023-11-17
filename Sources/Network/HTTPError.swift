@@ -6,7 +6,7 @@
 //
 
 import Foundation
-public enum HTTPError: Error {
+public enum HTTPError {
     case invalidURL
     case invalidParameters
     case invalidResponse
@@ -38,4 +38,9 @@ public enum HTTPError: Error {
     case gatewayTimeout // 504
     case unknown(Int)
     case NoInternet
+}
+
+public struct RequestError<T: Decodable>:Error {
+    public let httpError:HTTPError
+    public let data:T?
 }
