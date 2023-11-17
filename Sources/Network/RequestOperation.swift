@@ -13,9 +13,9 @@ class RequestOperation<T:Decodable>:Operation {
     let method: HttpMethod
     let headers: [String: String]?
     let body: Data?
-    let completion: CompletionHandler<T>
+    let completion: (Result<T?, RequestError<T>>) -> Void
     
-    init(url: String, method: HttpMethod = .get, headers: [String : String]? = nil, body: Data? = nil, completion: @escaping CompletionHandler<T>) {
+    init(url: String, method: HttpMethod = .get, headers: [String : String]? = nil, body: Data? = nil, completion: @escaping (Result<T?, RequestError<T>>) -> Void) {
         self.url = url
         self.method = method
         self.headers = headers
@@ -28,9 +28,9 @@ class RequestOperation<T:Decodable>:Operation {
         request(completion: completion)
     }
     
-    public func request(completion: @escaping CompletionHandler<T>) {
+    public func request(completion: @escaping (Result<T?, RequestError<T>>) -> Void) {
         if !NetworkManager.shared.isConnected {
-            completion(.failure(.NoInternet))
+            completion(.failure(RequestError(httpError: .NoInternet, data: nil)))
             if #available(iOS 13.0, *) {
                 DispatchQueue.main.async {
                     ToastBanner.shared.show(message: "Check your internet connection.", style: .noInternet, position: .Bottom)
@@ -40,14 +40,14 @@ class RequestOperation<T:Decodable>:Operation {
             }
             return
         }
-        guard let url = URL(string: url) else {  completion(.failure(.invalidURL)); return}
+        guard let url = URL(string: url) else {  completion(.failure(RequestError(httpError: .invalidURL, data: nil))); return}
         Logger.log(.info, message: url)
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = headers
         request.httpBody = body
         if let data  = body {
-            Logger.log(.info, message: "Body \(String(decoding: data, as: UTF8.self).replacingOccurrences(of: "\"", with: ""))")
+            Logger.log(.info, message: "Body \(String(decoding: data, as: UTF8.self))")
         }
         
         if let headers = headers {
@@ -57,95 +57,100 @@ class RequestOperation<T:Decodable>:Operation {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(.invalidResponse))
+                completion(.failure(RequestError(httpError: .invalidResponse, data: nil)))
                 Logger.log(.info, message: "invalid response")
                 return
             }
             Logger.log(.info, message: "\(httpResponse.statusCode) \(httpResponse.url?.absoluteString ?? "")")
             if let data = data {
-                Logger.log(.info, message: String(decoding: data, as: UTF8.self).replacingOccurrences(of: "\"", with: ""))
+                Logger.log(.info, message: String(decoding: data, as: UTF8.self))
             }
             
             switch httpResponse.statusCode {
             case 200...299:
-                do {
-                    guard let data = data else {completion(.failure(.invalidData)); return}
-                    let model = try JSONDecoder().decode(T.self, from: data)
-                    completion(.success(model))
-                } catch {
-                     completion(.failure(.jsonParsingFailure))
-                }
+                completion(.success(self.getData(data: data)))
                 break
             case 400:
-                 completion(.failure(.badRequest))
+                completion(.failure(RequestError(httpError: .badRequest, data: self.getData(data: data))))
                 break
             case 401:
-                 completion(.failure(.unauthorized))
+                completion(.failure(RequestError(httpError: .unauthorized, data: self.getData(data: data))))
                 break
             case 403:
-                 completion(.failure(.forbidden))
+                completion(.failure(RequestError(httpError: .forbidden, data: self.getData(data: data))))
                 break
             case 404:
-                 completion(.failure(.notFound))
+                completion(.failure(RequestError(httpError: .notFound, data: self.getData(data: data))))
                 break
             case 405:
-                 completion(.failure(.methodNotAllowed))
+                completion(.failure(RequestError(httpError: .methodNotAllowed, data: self.getData(data: data))))
                 break
             case 408:
-                 completion(.failure(.requestTimeout))
+                completion(.failure(RequestError(httpError: .requestTimeout, data: self.getData(data: data))))
                 break
             case 409:
-                 completion(.failure(.conflict))
+                completion(.failure(RequestError(httpError: .conflict, data: self.getData(data: data))))
                 break
             case 410:
-                 completion(.failure(.gone))
+                completion(.failure(RequestError(httpError: .gone, data: self.getData(data: data))))
                 break
             case 411:
-                 completion(.failure(.lengthRequired))
+                completion(.failure(RequestError(httpError: .lengthRequired, data: self.getData(data: data))))
                 break
             case 412:
-                 completion(.failure(.preconditionFailed))
+                completion(.failure(RequestError(httpError: .preconditionFailed, data: self.getData(data: data))))
                 break
             case 413:
-                 completion(.failure(.payloadTooLarge))
+                completion(.failure(RequestError(httpError: .payloadTooLarge, data: self.getData(data: data))))
                 break
             case 414:
-                 completion(.failure(.uriTooLong))
+                completion(.failure(RequestError(httpError: .uriTooLong, data: self.getData(data: data))))
                 break
             case 415:
-                 completion(.failure(.unsupportedMediaType))
+                completion(.failure(RequestError(httpError: .unsupportedMediaType, data: self.getData(data: data))))
                 break
             case 416:
-                 completion(.failure(.rangeNotSatisfiable))
+                completion(.failure(RequestError(httpError: .rangeNotSatisfiable, data: self.getData(data: data))))
                 break
             case 417:
-                 completion(.failure(.expectationFailed))
+                completion(.failure(RequestError(httpError: .expectationFailed, data: self.getData(data: data))))
                 break
             case 418:
-                 completion(.failure(.teapot))
+                completion(.failure(RequestError(httpError: .teapot, data: self.getData(data: data))))
                 break
             case 429:
-                 completion(.failure(.tooManyRequests))
+                completion(.failure(RequestError(httpError: .tooManyRequests, data: self.getData(data: data))))
                 break
             case 500:
-                 completion(.failure(.serverError))
+                completion(.failure(RequestError(httpError: .serverError, data: self.getData(data: data))))
                 break
             case 502:
-                 completion(.failure(.badGateway))
+                completion(.failure(RequestError(httpError: .badGateway, data: self.getData(data: data))))
                 break
             case 503:
-                 completion(.failure(.serviceUnavailable))
+                completion(.failure(RequestError(httpError: .serviceUnavailable, data: self.getData(data: data))))
                 break
             case 504:
-                 completion(.failure(.gatewayTimeout))
+                completion(.failure(RequestError(httpError: .gatewayTimeout, data: self.getData(data: data))))
                 break
             default:
-                 completion(.failure(.unknown(httpResponse.statusCode)))
+                completion(.failure(RequestError(httpError: .unknown(httpResponse.statusCode), data: self.getData(data: data))))
                 break
             }
             
         }
         task.resume()
+    }
+    
+    func getData(data:Data?) -> T?{
+        do {
+            guard let data = data else {completion(.failure(RequestError(httpError: .invalidData, data: nil))); return nil}
+            let model = try JSONDecoder().decode(T.self, from: data)
+            return model
+        } catch {
+            completion(.failure(RequestError(httpError: .jsonParsingFailure, data: nil)))
+        }
+        return nil
     }
     
 }
