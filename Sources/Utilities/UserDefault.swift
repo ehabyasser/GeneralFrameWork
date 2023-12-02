@@ -56,7 +56,7 @@ public struct CodableUserDefault<T:Codable> {
 
 
 extension Encodable {
-    var convertToString: String? {
+   public var convertToString: String? {
         let jsonEncoder = JSONEncoder()
         jsonEncoder.outputFormatting = .prettyPrinted
         do {
