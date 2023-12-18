@@ -40,7 +40,7 @@ public enum HTTPError {
     case NoInternet
 }
 
-public struct RequestError<T: Decodable>:Error {
+open struct RequestError<T: Decodable>:Error {
     public let httpError:HTTPError
     public let data:T?
 }
