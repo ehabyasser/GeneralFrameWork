@@ -44,5 +44,8 @@ public struct RequestError<T: Decodable>:Error {
     public let httpError:HTTPError
     public let data:T?
 
-    public init() {}
+    public init(httpError:HTTPError , data:T?) {
+        self.httpError = httpError
+        self.data = data
+    }
 }
