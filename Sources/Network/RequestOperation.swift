@@ -149,6 +149,7 @@ class RequestOperation<T:Decodable>:Operation {
             return model
         } catch {
             completion(.failure(RequestError(httpError: .jsonParsingFailure, data: nil)))
+            print(error.localizedDescription)
         }
         return nil
     }
