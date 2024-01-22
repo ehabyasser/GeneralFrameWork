@@ -80,7 +80,7 @@ class RequestOperation<T:Decodable>:Operation {
                 completion(.failure(RequestError(httpError: .forbidden, data: self.getData(data: data))))
                 break
             case 404:
-                completion(.failure(RequestError(httpError: .notFound, data: nil)))
+                completion(.failure(RequestError(httpError: .notFound, data: self.getData(data: data))))
                 break
             case 405:
                 completion(.failure(RequestError(httpError: .methodNotAllowed, data: self.getData(data: data))))
