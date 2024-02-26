@@ -64,7 +64,7 @@ class RequestOperation<T:Decodable>:Operation {
             Logger.log(.info, message: "\(httpResponse.statusCode) \(httpResponse.url?.absoluteString ?? "")")
             if let data = data {
                 if httpResponse.statusCode == 500 {
-                    if String(decoding: data, as: UTF8.self).contains("\StatusCode\:401"){
+                    if String(decoding: data, as: UTF8.self).contains("401"){
                         completion(.failure(RequestError(httpError: .unauthorized, data: self.getData(data: data))))
                         return
                     }
