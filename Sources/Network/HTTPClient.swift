@@ -22,5 +22,10 @@ public class HTTPClient {
             self.queue.addOperations([requestOperation], waitUntilFinished: true)
         }
     }
+
+
+    public func cancelOperations(){
+        self.queue.cancelAllOperations()
+    }
     
 }
